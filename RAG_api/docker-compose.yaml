@@ -1,0 +1,28 @@
+services:
+  rag_api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    networks:
+      - llm_rag_network
+    depends_on:
+      - qdrant  # Указываем зависимость от Qdrant
+
+  qdrant:
+    image: qdrant/qdrant:latest  # Используем официальный образ Qdrant
+    ports:
+      - "6333:6333"  # Проброс порта для HTTP API
+      - "6334:6334"  # Проброс порта для gRPC
+    networks:
+      - llm_rag_network
+    volumes:
+      - qdrant_data:/qdrant/storage  # Опционально: хранилище для данных
+
+networks:
+  llm_rag_network:
+    external: true
+
+volumes:
+  qdrant_data:

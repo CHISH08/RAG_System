@@ -1,0 +1,12 @@
+# key
+config.py
+
+# cache
+__pycache__
+
+# weight
+user_bge_m3
+*.gguf
+
+# library
+llama.cpp
