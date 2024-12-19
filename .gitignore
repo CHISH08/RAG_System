@@ -3,6 +3,7 @@ config.py
 
 # cache
 __pycache__
+*_cache
 
 # weight
 user_bge_m3
@@ -10,3 +11,10 @@ user_bge_m3
 
 # library
 llama.cpp
+
+# env
+project
+
+# other
+present
+build

@@ -6,16 +6,15 @@ def test_stream():
     payload = {"question": "Как программировать?"}
 
     with requests.post(url, json=payload, stream=True) as response:
-        for chunk in response.iter_lines(decode_unicode=False):  # Не декодируем сразу
-            if chunk.strip() == b"[DONE]":  # Конец потока
+        for chunk in response.iter_lines(decode_unicode=False):
+            if chunk.strip() == b"[DONE]":
                 break
-            if chunk.startswith(b"data: "):  # Проверяем, начинается ли строка с "data: "
-                chunk = chunk[6:]  # Убираем "data: "
+            if chunk.startswith(b"data: "):
+                chunk = chunk[6:]
                 try:
-                    # Загружаем строку как JSON
-                    data = json.loads(chunk.decode("utf-8"))  # Декодируем строку
+                    data = json.loads(chunk.decode("utf-8"))
                     content = data.get("choices", [{}])[0].get("delta", {}).get("content", "")
-                    if content:  # Если есть текст, выводим его
+                    if content:
                         print(content, end="", flush=True)
                 except json.JSONDecodeError:
                     continue

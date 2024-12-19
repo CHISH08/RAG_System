@@ -4,7 +4,7 @@ import json
 
 app = Flask(__name__)
 
-RAG_SERVER_URL = "http://localhost:8001/stream"
+RAG_SERVER_URL = "http://app:8001/stream"
 
 @app.route("/")
 def index():
@@ -17,7 +17,7 @@ def favicon():
 @app.route("/chat", methods=["POST"])
 def chat():
     user_message = request.json.get("message", "")
-    history = request.json.get("history", [])[-2:]  # История передаётся с запросом
+    history = request.json.get("history", [])[-2:]
 
     if not user_message:
         return jsonify({"error": "Message cannot be empty."}), 400
@@ -31,16 +31,15 @@ def chat():
             yield f"Error: {response.status_code} - {response.text}"
             return
 
-        for chunk in response.iter_lines(decode_unicode=False):  # Не декодируем сразу
-            if chunk.strip() == b"[DONE]":  # Конец потока
+        for chunk in response.iter_lines(decode_unicode=False):
+            if chunk.strip() == b"[DONE]":
                 break
-            if chunk.startswith(b"data: "):  # Проверяем, начинается ли строка с "data: "
-                chunk = chunk[6:]  # Убираем "data: "
+            if chunk.startswith(b"data: "):
+                chunk = chunk[6:]
                 try:
-                    # Загружаем строку как JSON
-                    data = json.loads(chunk.decode("utf-8"))  # Декодируем строку
+                    data = json.loads(chunk.decode("utf-8"))
                     content = data.get("choices", [{}])[0].get("delta", {}).get("content", "")
-                    if content:  # Если есть текст, выводим его
+                    if content:
                         yield content
                 except json.JSONDecodeError:
                     continue

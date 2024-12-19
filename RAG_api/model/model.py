@@ -3,11 +3,9 @@ from .components import Searcher, WorkWithVBD, Summarizer, LLM
 class QAModel:
     def __init__(self):
         self.searcher = Searcher()
-        # self.vbd = WorkWithVBD(host="rag_api-qdrant-1", port=6333)
+        self.vbd = WorkWithVBD(host="qdrant", port=6333)
         # self.summariz = Summarizer(self.vbd.embedder, self.vbd.batch_size)
-        # self.writer = LLM(host="llm-ollama-1", port=11434)
-        self.writer = LLM()
-        self.vbd = WorkWithVBD("localhost", 6333)
+        self.writer = LLM(host="llm", port=8000)
 
     async def __call__(self, question: str, history: list=[], limit_context=2, limit_summary=40, threshold=0.5):
         context = self.vbd.search(question, limit=limit_context, threshold=threshold)

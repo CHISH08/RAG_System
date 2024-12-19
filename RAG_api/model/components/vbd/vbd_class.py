@@ -2,11 +2,15 @@ from qdrant_client import QdrantClient
 from qdrant_client.http.models import PointStruct
 from sentence_transformers import SentenceTransformer
 from tqdm import tqdm
+import os
 
 class WorkWithVBD:
     def __init__(self, host: str, port: int, embedder_name="deepvk/USER-bge-m3", collection_name="qdrant_collection", batch_size=64):
         self.__connect(host, port)
-        self.embedder = SentenceTransformer(embedder_name, device="cuda")
+        model_cache_folder = os.path.join(os.path.dirname(__file__), "../../sentence_transformer_cache")
+        os.makedirs(model_cache_folder, exist_ok=True)
+
+        self.embedder = SentenceTransformer(embedder_name, device="cuda", cache_folder=model_cache_folder)
         check_collection_existence = self.__check_collection_existence(collection_name)
         if not check_collection_existence:
             self.create_collection(collection_name)

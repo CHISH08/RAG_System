@@ -8,17 +8,14 @@ sendButton.addEventListener("click", async () => {
     const message = userInput.value.trim();
     if (!message) return;
 
-    // Add user message to chat
     const userMessage = document.createElement("div");
     userMessage.textContent = message;
     userMessage.className = "user-message";
     messages.appendChild(userMessage);
     messages.scrollTop = messages.scrollHeight;
 
-    // Add user message to history
     chatHistory.push({ question: message, answer: "" });
 
-    // Clear input field
     userInput.value = "";
 
     try {
@@ -51,7 +48,6 @@ sendButton.addEventListener("click", async () => {
             messages.scrollTop = messages.scrollHeight;
         }
 
-        // Update last history entry with bot's reply
         chatHistory[chatHistory.length - 1].answer = botReply;
     } catch (error) {
         console.error(error);
