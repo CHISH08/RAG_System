@@ -1,0 +1,20 @@
+# key
+config.py
+
+# cache
+__pycache__
+*_cache
+
+# weight
+user_bge_m3
+*.gguf
+
+# library
+llama.cpp
+
+# env
+project
+
+# other
+present
+build
