@@ -4,9 +4,9 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "8002:8002"
+      - "8002:5000"  # Проброс порта контейнера (5000) на порт хоста (8002)
     volumes:
-      - ./app.py:/app/app.py
+      - ./app.py:/app/app.py  # Для локальной разработки
       - ./static:/app/static
       - ./templates:/app/templates
       - ./requirements.txt:/app/requirements.txt
@@ -17,4 +17,4 @@ services:
 
 networks:
   rag_network:
-    external: true
+    external: true  # Используем внешнюю Docker-сеть

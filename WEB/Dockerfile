@@ -1,6 +1,7 @@
+# Базовый образ с CUDA
 FROM nvidia/cuda:12.2.0-runtime-ubuntu22.04 AS base
 
-# Установка минимальных зависимостей, включая Python
+# Установка необходимых зависимостей
 RUN apt-get update && apt-get install -y \
     build-essential \
     git \
@@ -12,13 +13,11 @@ RUN apt-get update && apt-get install -y \
 # Устанавливаем рабочую директорию
 WORKDIR /app
 
-# Копируем файл requirements.txt для установки зависимостей
+# Копируем файл requirements.txt и устанавливаем зависимости
 COPY requirements.txt /app/
-
-# Устанавливаем зависимости
 RUN pip3 install --no-cache-dir -r requirements.txt
 
-# Копируем остальные файлы приложения
+# Копируем все файлы приложения в контейнер
 COPY . /app/
 
 # Настраиваем запуск приложения

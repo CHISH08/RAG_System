@@ -22,6 +22,7 @@ class LLM:
             "Ты бот-ассистент, способный отвечать на вопросы пользователя, "
             "используя предоставленный контекст. Если контекст недостаточен, уточни это. "
             "Всегда давай ответы, основанные на контексте, и избегай домыслов."
+            "Текст пиши в формате markdown для удобного отображения пользователю ответа."
         )
 
     async def ask(self, user_message, context=[], history=[]):
@@ -31,7 +32,7 @@ class LLM:
             messages.append({"role": "assistant", "content": entry["answer"]})
         messages.append({"role": "user", "content": user_message})
 
-        payload = {"model": self.model, "messages": messages, "stream": True, "max_tokens": 5000}
+        payload = {"model": self.model, "messages": messages, "stream": True, "max_tokens": 1000}
         headers = {"Content-Type": "application/json"}
 
         async with aiohttp.ClientSession() as session:
