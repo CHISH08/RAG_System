@@ -134,26 +134,53 @@ curl -X POST http://localhost:8001/stream      -H "Content-Type: application/jso
 
 ### Архитектура RAG системы
 
-![RAG Architecture](present/rag_arch.jpg)
+![RAG Architecture](present/architecture/rag_arch.jpg)
 
 ### Архитектура WEB
 
-![WEB Architecture](present/web_arch.jpg)
+![WEB Architecture](present/architecture/web_arch.jpg)
 
 ### Архитектура api RAG системы
 
-![RAG API Architecture](present/rag_api_arch.jpg)
+![RAG API Architecture](present/architecture/rag_api_arch.jpg)
 
 ### Взаимодействие контейнеров
 Взаимодействие выполняется с помощью общей сети в docker под названием rag_network
 
-![Docker Container Architecture](present/container_arch.jpg)
+![Docker Container Architecture](present/architecture/container_arch.jpg)
 
 ### Принцип работы
 
-![Base Architecture](present/base_arch.jpg)
+![Base Architecture](present/architecture/base_arch.jpg)
 
 ## Пример работы
 
 ### WEB интерфейс
 
+![WEB Interface](present/interface/web.png)
+
+### Request запрос
+
+![POST Interface](present/interface/request.png)
+
+## Особенности модели
+
+1) Запоминание контекста: модель способна запоминать предыдущие вопросы пользователя и ответы, которые она давала на них. Это позволяет модели лучше понимать, что от нее хочет пользователь.
+
+![Example History](present/example/history.png)
+
+2) Векторная база данных: модель имеет векторную базу данных, в которой хранятся данные, полученные при парсинге страниц в интернете. Это ускоряет работу модели, тк ей не всегда приходится искать релевантную информацию в интернете, а только в случаях, когда контекста нет. Также наличие базы данных уменьшает риск галюционирования модели.
+
+3) Доступ в интернет: при отсутствии ответа на вопрос, модель обращается в интернет за помощью, чтобы получить свежий и релеватный контекст для ответа.
+
+![Example Search](present/example/search.png)
+
+4) Использование ollama.cpp: ollama.cpp позволяет запускать LLM частично на гпу и частично на цпу. Таким образом можно регулировать скорость-память при ограниченной памяти гпу.
+
+```bash
+   docker run --name llm -d --gpus all   -v ./LLM:/models   --network rag_network   ghcr.io/ggerganov/llama.cpp:server-cuda   -m /models/Qwen2.5-Coder-14B-Instruct-IQ2_XS.gguf   --port 8000   --host 0.0.0.0   --n-gpu-layers 12
+```
+
+5) Использование instruct модели при всего 4 гб памяти гпу: llm потребляет всего 2 гб (при весе в 4 гб), остальные 2 гб расходуются на работу модели-эмбеддера.
+
+![GPU Memory](present/example/gpu.png)

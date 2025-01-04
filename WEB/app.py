@@ -17,7 +17,7 @@ def favicon():
 @app.route("/chat", methods=["POST"])
 def chat():
     user_message = request.json.get("message", "")
-    history = request.json.get("history", [])[-3:]
+    history = request.json.get("history", [])[-2:]
 
     if not user_message:
         return jsonify({"error": "Message cannot be empty."}), 400
